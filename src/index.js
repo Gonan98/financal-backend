@@ -1,9 +1,13 @@
-import { config } from 'dotenv';
+import './database';
 import app from './app';
 
-config();
-const port = process.env.PORT;
+function main() {
+    const port = process.env.PORT;
 
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
-});
+    app.listen(port, () => {
+        console.log(`Server listening on port ${port}`);
+    });
+
+}
+
+main();

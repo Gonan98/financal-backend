@@ -1,17 +1,16 @@
-import { Sequelize } from 'sequelize';
+import mongoose from 'mongoose';
+import { config } from 'dotenv';
 
-export const sequelize = new Sequelize(
-    'postgres',
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
+config();
+
+const host = process.env.DB_HOST;
+const database = process.env.DB_NAME;
+
+mongoose.connect(
+    `mongodb://${host}/${database}`,
     {
-        host: 'localhost',
-        dialect: 'postgres',
-        pool: {
-            max: 5,
-            min: 0,
-            require: 30000,
-            idle: 10000
-        }
+        useNewUrlParser: true,
+        useUnifiedTopology: true
     }
-);
+).then(db => console.log('Database connection successfully'))
+    .catch(err => console.error(err));
