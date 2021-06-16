@@ -1,16 +1,14 @@
 import mongoose from 'mongoose';
-import { config } from 'dotenv';
+import config from './config';
 
-config();
-
-const host = process.env.DB_HOST;
-const database = process.env.DB_NAME;
 
 mongoose.connect(
-    `mongodb://${host}/${database}`,
+    `mongodb://${config.db_host}/${config.db_name}`,
     {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false
     }
 ).then(db => console.log('Database connection successfully'))
-    .catch(err => console.error(err));
+    .catch(console.error);

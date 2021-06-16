@@ -4,6 +4,7 @@
 
 - DB_HOST
 - DB_NAME
+- TOKEN_SECRET
 - PORT
 
 ## Available Scripts

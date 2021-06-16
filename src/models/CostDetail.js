@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-const costExpenseDetail = new Schema({
+const costDetailSchema = new Schema({
     amount: {
         type: Number,
         required: true,
@@ -16,8 +16,8 @@ const costExpenseDetail = new Schema({
         type: Schema.Types.ObjectId,
         required: true
     },
-    cost_expense_id: {
-        ref: 'CostExpense',
+    cost_id: {
+        ref: 'Cost',
         type: Schema.Types.ObjectId,
         required: true
     }
@@ -25,4 +25,4 @@ const costExpenseDetail = new Schema({
     timestamps: true
 });
 
-const CostExpenseDetail = model('CostExpenseDetail', costExpenseDetail);
+const CostDetail = model('CostDetail', costDetailSchema);

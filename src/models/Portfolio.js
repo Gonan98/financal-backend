@@ -7,7 +7,7 @@ const portfolioSchema = new Schema({
     },
     rate: {
         type: Number,
-        min: 1,
+        max: 1,
         required: true
     },
     capitalization: {
@@ -21,7 +21,7 @@ const portfolioSchema = new Schema({
             'CUATRIMESTRAL',
             'SEMESTRAL',
             'ANUAL'
-        ],
+        ]
     },
     currency: {
         type: String,
@@ -34,7 +34,11 @@ const portfolioSchema = new Schema({
     days: {
         type: Number,
         enum: [360, 365],
-        required: true
+        default: 360
+    },
+    active: {
+        type: Boolean,
+        default: true
     },
     term_id: {
         ref: 'Term',

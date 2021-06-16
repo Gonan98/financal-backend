@@ -1,13 +1,13 @@
 import './database';
 import app from './app';
+import config from './config';
+import initData from './data';
 
 function main() {
-    const port = process.env.PORT;
-
-    app.listen(port, () => {
-        console.log(`Server listening on port ${port}`);
+    initData();
+    app.listen(config.port, () => {
+        console.log(`Server listening on port ${config.port}`);
     });
-
 }
 
 main();

@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-const costExpenseSchema = new Schema({
+const costSchema = new Schema({
     reason: {
         type: String,
         required: true,
@@ -11,6 +11,6 @@ const costExpenseSchema = new Schema({
     timestamps: false
 });
 
-const CostExpense = model('CostExpense', costExpenseSchema);
+const Cost = model('Cost', costSchema);
 
-export default CostExpense;
+export default Cost;

@@ -10,14 +10,15 @@ const letterSchema = new Schema({
         required: true
     },
     retention: {
-        type: Number
+        type: Number,
+        default: 0
     },
     amount: {
         type: Number,
         required: true,
         min: 100
     },
-    cartera_id: {
+    portfolio_id: {
         ref: 'Portfolio',
         type: Schema.Types.ObjectId,
         required: true
