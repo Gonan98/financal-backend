@@ -29,11 +29,11 @@ export const createPortfolio = async (req, res) => {
 
     let portfolioDB = await Portfolio.findOne({
         discount_date,
-        rate,
+        /*rate,
         capitalization,
         currency,
         days,
-        term_id,
+        term_id,*/
         customer_id,
         user_id: req.user_id
     });

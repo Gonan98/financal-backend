@@ -26,3 +26,5 @@ const costDetailSchema = new Schema({
 });
 
 const CostDetail = model('CostDetail', costDetailSchema);
+
+export default CostDetail;
