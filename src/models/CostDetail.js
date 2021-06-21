@@ -11,7 +11,7 @@ const costDetailSchema = new Schema({
         enum: ['INICIO', 'FINAL'],
         required: true,
     },
-    letra_id: {
+    letter_id: {
         ref: 'Letter',
         type: Schema.Types.ObjectId,
         required: true

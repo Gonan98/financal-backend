@@ -27,18 +27,6 @@ export const addLetter = async (req, res) => {
         });
     }
 
-    /*let letterDB = await Letter.findOne({
-        issue_date,
-        due_date,
-        portfolio_id
-    });
-
-    if (letterDB) {
-        return res.status(400).json({
-            message: 'La letra ya ha sido registrada'
-        });
-    }*/
-
     letterDB = new Letter({
         issue_date,
         due_date,

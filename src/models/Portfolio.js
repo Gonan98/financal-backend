@@ -13,7 +13,7 @@ const portfolioSchema = new Schema({
     capitalization: {
         type: String,
         enum: [
-            'DIARIO',
+            'DIARIA',
             'QUINCENAL',
             'MENSUAL',
             'BIMESTRAL',
@@ -41,8 +41,17 @@ const portfolioSchema = new Schema({
         default: true
     },
     term_id: {
-        ref: 'Term',
-        type: Schema.Types.ObjectId,
+        type: String,
+        enum: [
+            'DIARIA',
+            'QUINCENAL',
+            'MENSUAL',
+            'BIMESTRAL',
+            'TRIMESTRAL',
+            'CUATRIMESTRAL',
+            'SEMESTRAL',
+            'ANUAL'
+        ],
         required: true
     },
     customer_id: {

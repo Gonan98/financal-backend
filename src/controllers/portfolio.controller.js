@@ -1,21 +1,14 @@
 import Customer from '../models/Customer';
 import Portfolio from '../models/Portfolio';
-import Term from '../models/Term';
 
 export const createPortfolio = async (req, res) => {
     const { discount_date, rate, capitalization, currency, days, term_id, customer_id } = req.body
 
     if (!discount_date || !rate || !currency || !term_id || !customer_id) {
+        console.log('Faltan Datos');
+        console.log(req.body);
         return res.status(400).json({
             message: 'Faltan datos'
-        });
-    }
-
-    const termDB = await Term.findById(term_id);
-
-    if (!termDB) {
-        return res.status(404).json({
-            message: 'Plazo no encontrado'
         });
     }
 
@@ -29,13 +22,8 @@ export const createPortfolio = async (req, res) => {
 
     let portfolioDB = await Portfolio.findOne({
         discount_date,
-        /*rate,
-        capitalization,
-        currency,
-        days,
-        term_id,*/
         customer_id,
-        user_id: req.user_id
+        user: req.user_id
     });
 
     if (portfolioDB) {
@@ -52,7 +40,7 @@ export const createPortfolio = async (req, res) => {
         days,
         term_id,
         customer_id,
-        user_id: req.user_id
+        user: req.user_id
     });
 
     try {

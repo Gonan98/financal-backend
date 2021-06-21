@@ -35,6 +35,7 @@ const customerSchema = new Schema({
     address: {
         type: String,
         maxLength: 70,
+        required: true
     }
 }, {
     timestamps: true

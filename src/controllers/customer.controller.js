@@ -19,6 +19,7 @@ export const addCustomer = async (req, res) => {
         });
     }
 
+
     const customerDB = await Customer.findOne({ ruc });
 
     if (customerDB) {
@@ -40,9 +41,10 @@ export const addCustomer = async (req, res) => {
         newCustomer = await newCustomer.save();
         return res.status(201).json({
             message: 'Cliente agregado correctamente',
-            data: customerDB
+            data: newCustomer
         });
     } catch (error) {
+        console.error(error);
         return res.status(500).json({
             message: 'Error en la base de datos'
         });
@@ -65,6 +67,7 @@ export const getCustomerById = async (req, res) => {
             message: 'Cliente encontrado',
             data: customerDB
         });
+
     } catch (error) {
         return res.status(400).json({
             message: 'El id no es válido'
