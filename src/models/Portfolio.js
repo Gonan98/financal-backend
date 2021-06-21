@@ -13,6 +13,7 @@ const portfolioSchema = new Schema({
     capitalization: {
         type: String,
         enum: [
+            'NULL',
             'DIARIA',
             'QUINCENAL',
             'MENSUAL',
@@ -40,7 +41,7 @@ const portfolioSchema = new Schema({
         type: Boolean,
         default: true
     },
-    term_id: {
+    term: {
         type: String,
         enum: [
             'DIARIA',

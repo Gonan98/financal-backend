@@ -2,9 +2,9 @@ import Customer from '../models/Customer';
 import Portfolio from '../models/Portfolio';
 
 export const createPortfolio = async (req, res) => {
-    const { discount_date, rate, capitalization, currency, days, term_id, customer_id } = req.body
+    const { discount_date, rate, capitalization, currency, days, term, customer_id } = req.body
 
-    if (!discount_date || !rate || !currency || !term_id || !customer_id) {
+    if (!discount_date || !rate || !currency || !term || !customer_id) {
         console.log('Faltan Datos');
         console.log(req.body);
         return res.status(400).json({
@@ -38,14 +38,14 @@ export const createPortfolio = async (req, res) => {
         capitalization,
         currency,
         days,
-        term_id,
+        term,
         customer_id,
-        user: req.user_id
+        user_id: req.user_id
     });
 
     try {
         portfolioDB = await portfolioDB.save();
-        return res.status(200).json({
+        return res.status(201).json({
             message: 'Cartera creada correctamente',
             data: portfolioDB
         });

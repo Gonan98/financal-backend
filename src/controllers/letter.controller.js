@@ -27,7 +27,7 @@ export const addLetter = async (req, res) => {
         });
     }
 
-    letterDB = new Letter({
+    let letterDB = new Letter({
         issue_date,
         due_date,
         retention,
