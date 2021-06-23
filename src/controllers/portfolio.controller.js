@@ -13,8 +13,8 @@ export const createPortfolio = async (req, res) => {
     const operation = await Operation.findOne({ customer_id, user_id: req.user_id });
 
     if (!operation) {
-        return res.status(404).json({
-            message: 'Cliente del usuario actual no encontrado'
+        return res.status(400).json({
+            message: 'No tiene registrado a ese cliente'
         });
     }
 
@@ -90,7 +90,7 @@ export const getPortfolioByCustomerId = async (req, res) => {
 
     if (!operation) {
         return res.status(404).json({
-            message: `Cliente no registrado`
+            message: `No tiene al cliente registrado`
         });
     }
 
@@ -112,15 +112,26 @@ export const deletePortfolio = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const portfolioDB = await Portfolio.findByIdAndUpdate(id, { active: false });
+        const portfolioDB = await Portfolio.findById(id);
+
+        const operation = await Operation.findById(portfolioDB.operation_id);
+
+        if (operation.user_id !== req.user_id) {
+            return res.status(400).json({
+                message: 'No tiene acceso a esta cartera'
+            });
+        }
+
+        portfolioDB.active = false;
+
+        await portfolioDB.save();
 
         return res.status(200).json({
-            message: `Cartera eliminada`,
-            data: portfolioDB
+            message: `Cartera eliminada`
         });
     } catch (error) {
         return res.status(500).json({
-            message: 'No se puedo eliminar la cartera'
+            message: 'Error al eliminar la cartera'
         });
     }
 

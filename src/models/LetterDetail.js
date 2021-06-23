@@ -8,7 +8,8 @@ const letterDetailSchema = new Schema({
             'Portes',
             'Comisiones',
             'Gastos Administrativos',
-            'Seguro'
+            'Seguro',
+            'Otros gastos'
         ],
         required: true,
     },

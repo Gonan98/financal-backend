@@ -1,8 +1,15 @@
 import Portfolio from '../models/Portfolio';
 import Letter from '../models/Letter';
+import Operation from '../models/Operation';
 
 export const addLetter = async (req, res) => {
-    const { issue_date, due_date, retention, amount, portfolio_id } = req.body;
+    const {
+        issue_date,
+        due_date,
+        retention,
+        amount,
+        portfolio_id
+    } = req.body;
 
     if (!issue_date || !due_date || !amount || !portfolio_id) {
         return res.status(400).json({
@@ -18,6 +25,14 @@ export const addLetter = async (req, res) => {
         });
     }
 
+    const operation = await Operation.findById(portfolioDB.operation_id);
+
+    if (operation.user_id !== req.user_id) {
+        return res.status(400).json({
+            message: 'La cartera no ha sido registrada por usted'
+        });
+    }
+
     const issueDate = new Date(issue_date);
     const dueDate = new Date(due_date);
 
@@ -27,7 +42,7 @@ export const addLetter = async (req, res) => {
         });
     }
 
-    let letterDB = new Letter({
+    const newLetter = new Letter({
         issue_date,
         due_date,
         retention,
@@ -36,12 +51,11 @@ export const addLetter = async (req, res) => {
     });
 
     try {
-        letterDB = await letterDB.save();
+        await newLetter.save();
         return res.status(201).json({
-            message: 'Letra creada correctamente',
-            data: letterDB
+            message: 'Letra agregada correctamente'
         });
-    } catch (err) {
+    } catch (e) {
         return res.status(500).json({
             message: 'Error al crear la letra'
         });
@@ -50,6 +64,22 @@ export const addLetter = async (req, res) => {
 
 export const getLettersByPortfolioId = async (req, res) => {
     const { portfolioId } = req.params;
+
+    const portfolio = await Portfolio.findById(portfolioId);
+
+    if (!portfolio) {
+        return res.status(404).json({
+            message: `Cartera con ID:${portfolioId} no existe`
+        });
+    }
+
+    const operation = await Operation.findById(portfolio.operation_id);
+
+    if (operation.user_id !== req.user_id) {
+        return res.status(404).json({
+            message: `La cartera no ha sido registrada por ustede`
+        });
+    }
 
     const letters = await Letter.find({ portfolio_id: portfolioId });
 

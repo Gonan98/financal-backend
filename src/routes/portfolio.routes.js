@@ -7,6 +7,6 @@ const router = Router();
 router.post('/', verifyToken, createPortfolio);
 router.get('/:id', verifyToken, getPortfolioById);
 router.get('/customer/:customerId', verifyToken, getPortfolioByCustomerId);
-router.delete('/:id/customer/:customerId', verifyToken, deletePortfolio);
+router.delete('/:id', verifyToken, deletePortfolio);
 
 export default router;
