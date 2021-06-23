@@ -55,13 +55,8 @@ const portfolioSchema = new Schema({
         ],
         required: true
     },
-    customer_id: {
-        ref: 'Customer',
-        type: Schema.Types.ObjectId,
-        required: true
-    },
-    user_id: {
-        ref: 'User',
+    operation_id: {
+        ref: 'Operation',
         type: Schema.Types.ObjectId,
         required: true
     }

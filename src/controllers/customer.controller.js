@@ -1,8 +1,11 @@
 import Customer from '../models/Customer';
+import Operation from '../models/Operation';
 
 export const getAllCustomer = async (req, res) => {
 
-    const customers = await Customer.find();
+    const operations = await Operation.find({ user_id: req.user_id });
+    const ids = operations.map(o => o.customer_id);
+    const customers = await Customer.find({ _id: { $in: ids } });
     return res.status(200).json({
         message: 'Lista de clientes',
         data: customers
@@ -19,34 +22,44 @@ export const addCustomer = async (req, res) => {
         });
     }
 
-
-    const customerDB = await Customer.findOne({ ruc });
-
-    if (customerDB) {
-        return res.status(400).json({
-            message: 'El cliente ya está registrado'
-        });
-    }
-
-    let newCustomer = new Customer({
-        ruc,
-        business_name,
-        firstname,
-        lastname,
-        phone,
-        address
-    });
-
     try {
-        newCustomer = await newCustomer.save();
-        return res.status(201).json({
-            message: 'Cliente agregado correctamente',
-            data: newCustomer
+        let customer = await Customer.findOne({ ruc });
+
+        if (!customer) {
+            customer = new Customer({
+                ruc,
+                business_name,
+                firstname,
+                lastname,
+                phone,
+                address
+            });
+
+            customer = await customer.save();
+        }
+
+        let operation = await Operation.findOne({ customer_id: customer._id, user_id: req.user_id });
+
+        if (operation) {
+            return res.status(400).json({
+                message: 'El cliente ya fue registrado'
+            });
+        }
+
+        operation = new Operation({
+            customer_id: customer._id,
+            user_id: req.user_id
         });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: 'Error en la base de datos'
+
+        await operation.save();
+
+        res.status(201).json({
+            message: 'Cliente registrado correctamente'
+        });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({
+            message: 'Error al registrar el cliente'
         });
     }
 }
@@ -55,17 +68,19 @@ export const getCustomerById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const customerDB = await Customer.findById(id);
+        const operation = await Operation.findOne({ customer_id: id, user_id: req.user_id });
 
-        if (!customerDB) {
+        if (!operation) {
             return res.status(404).json({
-                message: `Cliente con ID:${id} no existe`
+                message: `Cliente no registrado`
             });
         }
 
+        const customer = await Customer.findById(operation.customer_id);
+
         return res.status(200).json({
             message: 'Cliente encontrado',
-            data: customerDB
+            data: customer
         });
 
     } catch (error) {

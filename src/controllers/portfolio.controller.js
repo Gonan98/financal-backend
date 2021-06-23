@@ -1,29 +1,26 @@
-import Customer from '../models/Customer';
+import Operation from '../models/Operation';
 import Portfolio from '../models/Portfolio';
 
 export const createPortfolio = async (req, res) => {
     const { discount_date, rate, capitalization, currency, days, term, customer_id } = req.body
 
     if (!discount_date || !rate || !currency || !term || !customer_id) {
-        console.log('Faltan Datos');
-        console.log(req.body);
         return res.status(400).json({
-            message: 'Faltan datos'
+            message: 'Faltan datos de la cartera'
         });
     }
 
-    const customerDB = await Customer.findById(customer_id);
+    const operation = await Operation.findOne({ customer_id, user_id: req.user_id });
 
-    if (!customerDB) {
+    if (!operation) {
         return res.status(404).json({
-            message: 'Cliente no encontrado'
+            message: 'Cliente del usuario actual no encontrado'
         });
     }
 
     let portfolioDB = await Portfolio.findOne({
         discount_date,
-        customer_id,
-        user: req.user_id
+        operation_id: operation._id
     });
 
     if (portfolioDB) {
@@ -39,49 +36,75 @@ export const createPortfolio = async (req, res) => {
         currency,
         days,
         term,
-        customer_id,
-        user_id: req.user_id
+        operation_id: operation._id
     });
 
     try {
-        portfolioDB = await portfolioDB.save();
+        await portfolioDB.save();
         return res.status(201).json({
-            message: 'Cartera creada correctamente',
-            data: portfolioDB
+            message: 'Cartera creada correctamente'
         });
     } catch (error) {
-        console.error(error);
         return res.status(500).json({
             message: 'Error en la base de datos'
         });
     }
 }
 
-export const getPortfolioBydId = async (req, res) => {
+export const getPortfolioById = async (req, res) => {
     const { id } = req.params;
 
-    const portfolioDB = await Portfolio.findById(id);
+    try {
+        const portfolio = await Portfolio.findById(id);
 
-    if (!portfolioDB) {
-        return res.status(404).json({
-            message: 'Cartera no encontrada'
+        if (!portfolio) {
+            return res.status(404).json({
+                message: `Cartera con Id:${id} no existe`
+            });
+        }
+
+        const operation = await Operation.findById(portfolio.operation_id);
+
+        if (operation.user_id !== req.user_id) {
+            return res.status(401).json({
+                message: 'No tiene acceso a esta cartera'
+            });
+        }
+
+        return res.status(200).json({
+            message: 'Cartera encontrada',
+            data: portfolio
+        });
+
+    } catch (e) {
+        return res.status(500).json({
+            message: 'Error en el servidor'
         });
     }
-
-    return res.status(200).json({
-        message: 'Cartera encontrada',
-        data: portfolioDB
-    });
 }
 
 export const getPortfolioByCustomerId = async (req, res) => {
     const { customerId } = req.params;
 
-    const portfoliosDB = await Portfolio.find({ customer_id: customerId });
+    const operation = await Operation.findOne({ customer_id: customerId, user_id: req.user_id });
+
+    if (!operation) {
+        return res.status(404).json({
+            message: `Cliente no registrado`
+        });
+    }
+
+    const portfolios = await Portfolio.find({ operation_id: operation._id });
+
+    if (!portfolios) {
+        return res.status(404).json({
+            message: `El cliente no tiene carteras`
+        });
+    }
 
     return res.status(200).json({
         message: `Carteras del cliente ${customerId}`,
-        data: portfoliosDB
+        data: portfolios
     });
 }
 

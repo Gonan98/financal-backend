@@ -5,7 +5,6 @@ import morgan from 'morgan';
 import customerRoutes from './routes/customer.routes';
 import authRoutes from './routes/auth.routes';
 import portfolioRoutes from './routes/portfolio.routes';
-import costosRoutes from './routes/cost.routes';
 import letterRoutes from './routes/letter.routes';
 
 const app = express();
@@ -20,6 +19,5 @@ app.use('/api/v1/customers', customerRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/portfolios', portfolioRoutes);
 app.use('/api/v1/letters', letterRoutes);
-app.use('/api/v1/costs', costosRoutes);
 
 export default app;

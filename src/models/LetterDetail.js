@@ -1,6 +1,17 @@
 import { Schema, model } from 'mongoose';
 
-const costDetailSchema = new Schema({
+const letterDetailSchema = new Schema({
+    reason: {
+        type: String,
+        enum: [
+            'Fotocopias',
+            'Portes',
+            'Comisiones',
+            'Gastos Administrativos',
+            'Seguro'
+        ],
+        required: true,
+    },
     amount: {
         type: Number,
         required: true,
@@ -15,16 +26,11 @@ const costDetailSchema = new Schema({
         ref: 'Letter',
         type: Schema.Types.ObjectId,
         required: true
-    },
-    cost_id: {
-        ref: 'Cost',
-        type: Schema.Types.ObjectId,
-        required: true
     }
 }, {
     timestamps: true
 });
 
-const CostDetail = model('CostDetail', costDetailSchema);
+const LetterDetail = model('LetterDetail', letterDetailSchema);
 
-export default CostDetail;
+export default LetterDetail;
