@@ -17,19 +17,20 @@ export const addLetter = async (req, res) => {
         });
     }
 
-    const portfolioDB = await Portfolio.findById(portfolio_id);
+    const operations = await Operation.find({ user_id: req.user_id });
+
+    if (!operations) {
+        return res.status(404).json({
+            message: 'Debe registrar un cliente primero'
+        });
+    }
+
+    const operationsId = operations.map(o => o._id);
+    const portfolioDB = await Portfolio.findOne({ _id: portfolio_id, operation_id: { $in: operationsId } });
 
     if (!portfolioDB) {
         return res.status(404).json({
             message: `Cartera con ID:${portfolio_id} no existe`
-        });
-    }
-
-    const operation = await Operation.findById(portfolioDB.operation_id);
-
-    if (operation.user_id !== req.user_id) {
-        return res.status(400).json({
-            message: 'La cartera no ha sido registrada por usted'
         });
     }
 
@@ -65,19 +66,21 @@ export const addLetter = async (req, res) => {
 export const getLettersByPortfolioId = async (req, res) => {
     const { portfolioId } = req.params;
 
-    const portfolio = await Portfolio.findById(portfolioId);
+    const operations = await Operation.find({ user_id: req.user_id });
+
+    if (!operations) {
+        return res.status(404).json({
+            message: 'Debe registrar un cliente primero'
+        });
+    }
+
+    const operationsId = operations.map(o => o._id);
+
+    const portfolio = await Portfolio.findOne({ _id: portfolioId, operation_id: { $in: operationsId } });
 
     if (!portfolio) {
         return res.status(404).json({
             message: `Cartera con ID:${portfolioId} no existe`
-        });
-    }
-
-    const operation = await Operation.findById(portfolio.operation_id);
-
-    if (operation.user_id !== req.user_id) {
-        return res.status(404).json({
-            message: `La cartera no ha sido registrada por ustede`
         });
     }
 

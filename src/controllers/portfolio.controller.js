@@ -55,19 +55,21 @@ export const getPortfolioById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const portfolio = await Portfolio.findById(id);
 
-        if (!portfolio) {
+        const operation = await Operation.find({ user_id: req.user_id });
+
+        if (!operation) {
             return res.status(404).json({
-                message: `Cartera con Id:${id} no existe`
+                message: 'No tiene clientes para ver una cartera'
             });
         }
 
-        const operation = await Operation.findById(portfolio.operation_id);
+        const operationIds = operation.map(o => o._id);
+        const portfolio = await Portfolio.findOne({ _id: id, operation_id: { $in: operationIds } });
 
-        if (operation.user_id !== req.user_id) {
-            return res.status(401).json({
-                message: 'No tiene acceso a esta cartera'
+        if (!portfolio) {
+            return res.status(404).json({
+                message: `Cartera con Id:${id} no existe o no tiene acceso a ella`
             });
         }
 
@@ -112,19 +114,27 @@ export const deletePortfolio = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const portfolioDB = await Portfolio.findById(id);
 
-        const operation = await Operation.findById(portfolioDB.operation_id);
+        const operation = await Operation.find({ user_id: req.user_id });
 
-        if (operation.user_id !== req.user_id) {
-            return res.status(400).json({
-                message: 'No tiene acceso a esta cartera'
+        if (!operation) {
+            return res.status(404).json({
+                message: 'No tiene clientes para ver una cartera'
             });
         }
 
-        portfolioDB.active = false;
+        const operationIds = operation.map(o => o._id);
+        const portfolio = await Portfolio.findOne({ _id: id, operation_id: { $in: operationIds } });
 
-        await portfolioDB.save();
+        if (!portfolio) {
+            return res.status(404).json({
+                message: `Cartera con Id:${id} no existe o no tiene accesoa ella`
+            });
+        }
+
+        portfolio.active = false;
+
+        await portfolio.save();
 
         return res.status(200).json({
             message: `Cartera eliminada`

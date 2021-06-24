@@ -26,6 +26,7 @@ export const addCustomer = async (req, res) => {
         let customer = await Customer.findOne({ ruc });
 
         if (!customer) {
+
             customer = new Customer({
                 ruc,
                 business_name,
@@ -36,7 +37,17 @@ export const addCustomer = async (req, res) => {
             });
 
             customer = await customer.save();
+
+        } else {
+
+            if (customer.business_name !== business_name) {
+                return res.status(400).json({
+                    message: 'El ruc y la razon social no coinciden'
+                });
+            }
+
         }
+
 
         let operation = await Operation.findOne({ customer_id: customer._id, user_id: req.user_id });
 
@@ -91,20 +102,9 @@ export const getCustomerById = async (req, res) => {
 }
 
 export const updateCustomer = async (req, res) => {
-    const { ruc, business_name, firstname, lastname, phone, address } = req.body;
-    const { id } = req.body;
 
-    try {
-        const customerDB = await Customer.findByIdAndUpdate(id, {
-            ruc, business_name, firstname, lastname, phone, address
-        });
-        return res.status(200).json({
-            message: 'Cliente actualizado',
-            data: customerDB
-        })
-    } catch (error) {
-        return res.status(500).json({
-            message: 'Error en la base de datos'
-        });
-    }
+    res.status(200).json({
+        message: 'updateCustomer'
+    });
+
 }

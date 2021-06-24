@@ -11,11 +11,11 @@ export const signUp = async (req, res) => {
         });
     }
 
-    const userDB = await User.findOne({ email });
+    const userDB = await User.findOne({ $or: [{ ruc }, { email }] });
 
     if (userDB) {
         return res.status(400).json({
-            message: 'El email ya está registrado'
+            message: 'El ruc o email ya está registrado'
         });
     }
 
