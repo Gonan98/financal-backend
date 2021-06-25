@@ -11,17 +11,16 @@ const portfolioSchema = new Schema({
         required: true
     },
     capitalization: {
-        type: String,
+        type: Number,
         enum: [
-            'NULL',
-            'DIARIA',
-            'QUINCENAL',
-            'MENSUAL',
-            'BIMESTRAL',
-            'TRIMESTRAL',
-            'CUATRIMESTRAL',
-            'SEMESTRAL',
-            'ANUAL'
+            1,
+            15,
+            30,
+            60,
+            90,
+            120,
+            180,
+            360
         ]
     },
     currency: {
@@ -44,14 +43,14 @@ const portfolioSchema = new Schema({
     term: {
         type: String,
         enum: [
-            'DIARIA',
-            'QUINCENAL',
-            'MENSUAL',
-            'BIMESTRAL',
-            'TRIMESTRAL',
-            'CUATRIMESTRAL',
-            'SEMESTRAL',
-            'ANUAL'
+            1,
+            15,
+            30,
+            60,
+            90,
+            120,
+            180,
+            360
         ],
         required: true
     },
