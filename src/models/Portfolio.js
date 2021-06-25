@@ -41,7 +41,7 @@ const portfolioSchema = new Schema({
         default: true
     },
     term: {
-        type: String,
+        type: Number,
         enum: [
             1,
             15,
