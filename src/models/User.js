@@ -4,15 +4,11 @@ import bcrypt from 'bcryptjs';
 const userSchema = new Schema({
     ruc: {
         type: String,
-        minLength: 11,
-        maxLength: 11,
         unique: true,
         required: true
     },
     business_name: {
         type: String,
-        maxLength: 30,
-        minLength: 3,
         required: true
     },
     email: {

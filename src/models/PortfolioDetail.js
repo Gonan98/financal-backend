@@ -1,15 +1,15 @@
 import { Schema, model } from 'mongoose';
 
-const letterDetailSchema = new Schema({
+const portfolioDetailSchema = new Schema({
     reason: {
         type: String,
         enum: [
-            'Fotocopias',
-            'Portes',
-            'Comisiones',
-            'Gastos Administrativos',
-            'Seguro',
-            'Otros gastos'
+            'FOTOCOPIAS',
+            'PORTES',
+            'COMISIONES',
+            'GASTOS ADMINISTRATIVOS',
+            'SEGURO',
+            'OTROS GASTOS'
         ],
         required: true,
     },
@@ -20,7 +20,7 @@ const letterDetailSchema = new Schema({
     },
     moment: {
         type: String,
-        enum: ['INICIO', 'FINAL'],
+        enum: ['INICIAL', 'FINAL'],
         required: true,
     },
     letter_id: {
@@ -32,6 +32,6 @@ const letterDetailSchema = new Schema({
     timestamps: true
 });
 
-const LetterDetail = model('LetterDetail', letterDetailSchema);
+const PortfolioDetail = model('PortfolioDetail', portfolioDetailSchema);
 
-export default LetterDetail;
+export default PortfolioDetail;

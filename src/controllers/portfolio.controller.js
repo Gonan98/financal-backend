@@ -45,6 +45,7 @@ export const createPortfolio = async (req, res) => {
             message: 'Cartera creada correctamente'
         });
     } catch (error) {
+        console.error(error);
         return res.status(500).json({
             message: 'Error en la base de datos'
         });

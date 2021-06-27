@@ -23,7 +23,7 @@ export const addCustomer = async (req, res) => {
     }
 
     try {
-        let customer = await Customer.findOne({ ruc });
+        let customer = await Customer.findOne({ $or: [{ ruc }, { business_name }] });
 
         if (!customer) {
 
@@ -40,7 +40,7 @@ export const addCustomer = async (req, res) => {
 
         } else {
 
-            if (customer.business_name !== business_name) {
+            if (customer.business_name !== business_name || customer.ruc !== ruc) {
                 return res.status(400).json({
                     message: 'El ruc y la razon social no coinciden'
                 });
