@@ -23,8 +23,8 @@ const portfolioDetailSchema = new Schema({
         enum: ['INICIAL', 'FINAL'],
         required: true,
     },
-    letter_id: {
-        ref: 'Letter',
+    portfolio_id: {
+        ref: 'Portfolio',
         type: Schema.Types.ObjectId,
         required: true
     }
